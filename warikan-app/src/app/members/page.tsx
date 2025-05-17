@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 
 // 参加者型
@@ -128,13 +128,17 @@ export default function MembersPage() {
     if (data) setMembers(JSON.parse(data));
   };
 
+  // 精算額（割り勘合計）と差分の計算
+  const settlementSum = useMemo(() => results.reduce((sum, r) => sum + (typeof r.amount === "number" ? r.amount : 0), 0), [results]);
+  const diff = total === "" ? 0 : Number(total) - settlementSum;
+
   if (!positionsData) return null;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-green-50 p-4">
       <div className="w-full max-w-4xl bg-white/70 backdrop-blur-md shadow-2xl rounded-2xl p-8">
         <h1 className="text-3xl font-extrabold mb-8 text-center text-gray-900 tracking-tight drop-shadow">参加者入力</h1>
-        <div className="mb-8 flex flex-col sm:flex-row gap-6 justify-center">
+        <div className="mb-8 flex flex-col sm:flex-row gap-6 justify-center items-end">
           <label className="flex flex-col text-base font-semibold text-gray-900">
             合計金額（円）
             <input
@@ -146,6 +150,19 @@ export default function MembersPage() {
               placeholder="例: 5000"
             />
           </label>
+          {/* 精算額・差分表示 */}
+          <div className="flex flex-col gap-1 min-w-[180px] text-sm font-semibold text-gray-800">
+            <span>精算額: <span className="font-bold text-blue-700">{settlementSum.toLocaleString()} 円</span></span>
+            <span>
+              差分: {diff === 0 ? (
+                <span className="text-green-600 font-bold">ぴったり</span>
+              ) : diff > 0 ? (
+                <span className="text-orange-600 font-bold">{diff.toLocaleString()} 円（余り）</span>
+              ) : (
+                <span className="text-red-600 font-bold">{Math.abs(diff).toLocaleString()} 円（不足）</span>
+              )}
+            </span>
+          </div>
         </div>
         <div className="mb-8">
           <h2 className="text-xl font-bold mb-4 text-gray-900">参加者リスト</h2>
