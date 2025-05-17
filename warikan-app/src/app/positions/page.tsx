@@ -100,7 +100,7 @@ export default function PositionsPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-green-50 p-4">
       <div className="w-full max-w-2xl bg-white/70 backdrop-blur-md shadow-2xl rounded-2xl p-8">
-        <h1 className="text-3xl font-extrabold mb-8 text-center text-gray-900 tracking-tight drop-shadow">役職設定</h1>
+        <h1 className="text-3xl font-extrabold mb-8 text-center text-gray-900 tracking-tight drop-shadow">職級ポイント設定</h1>
         <div className="mb-6">
           <div className="flex flex-wrap items-end gap-2 mb-2">
             <input
