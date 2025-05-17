@@ -47,8 +47,8 @@ export default function ResultPage() {
     }
     const t = Number(total);
     // 役職ごとのポイント計算
-    const points = positionsData.positions.map((_, i) =>
-      positionsData.basePoint + positionsData.pointDiff * (positionsData.positions.length - 1 - i)
+    const points = positionsData.positions.map((_, _i) =>
+      positionsData.basePoint + positionsData.pointDiff * (positionsData.positions.length - 1 - _i)
     );
     // 参加者ごとのポイント
     const memberPoints = members.map(m => {
@@ -56,14 +56,14 @@ export default function ResultPage() {
       return idx >= 0 ? points[idx] : 0;
     });
     // 特別支払額が設定されている人
-    const customMembers = members.map((m, i) => (typeof m.customAmount === "number" && m.customAmount !== 0 ? i : -1)).filter(i => i >= 0);
+    const customMembers = members.map((m, _ii) => (typeof m.customAmount === "number" && m.customAmount !== 0 ? _ii : -1)).filter(i => i >= 0);
     const customTotal = customMembers.reduce((sum, i) => sum + (typeof members[i].customAmount === "number" ? members[i].customAmount as number : 0), 0);
     // 残り金額
     const restTotal = t - customTotal;
     // customAmount未設定の人の合計ポイント
     const restPoints = memberPoints.filter((_, i) => !customMembers.includes(i)).reduce((a, b) => a + b, 0);
     // 支払額計算
-    const result: Result[] = members.map((m, i) => {
+    const result: Result[] = members.map((m, _iii) => {
       if (typeof m.customAmount === "number" && m.customAmount !== 0) {
         return { name: m.name, amount: m.customAmount as number, note: "特別額" };
       } else if (restPoints > 0) {
