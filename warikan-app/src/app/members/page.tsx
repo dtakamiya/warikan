@@ -229,8 +229,8 @@ export default function MembersPage() {
                     {simpleSplit !== null && typeof results[_idx]?.amount === "number" && (
                       (() => {
                         const diff = results[_idx].amount - simpleSplit;
-                        let color = diff > 0 ? "text-blue-600" : diff < 0 ? "text-red-600" : "text-gray-500";
-                        let sign = diff > 0 ? "+" : diff < 0 ? "-" : "±";
+                        const color = diff > 0 ? "text-blue-600" : diff < 0 ? "text-red-600" : "text-gray-500";
+                        const sign = diff > 0 ? "+" : diff < 0 ? "-" : "±";
                         return (
                           <span className={`ml-2 text-xs font-semibold ${color}`}>
                             ({sign}{Math.abs(diff).toLocaleString()}円)
