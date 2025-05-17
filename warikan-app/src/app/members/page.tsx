@@ -225,6 +225,19 @@ export default function MembersPage() {
                     {results[_idx]?.note && (
                       <span className="ml-1 text-xs text-orange-500 font-semibold align-middle whitespace-nowrap">({results[_idx].note})</span>
                     )}
+                    {/* 単純割との差額表示 */}
+                    {simpleSplit !== null && typeof results[_idx]?.amount === "number" && (
+                      (() => {
+                        const diff = results[_idx].amount - simpleSplit;
+                        let color = diff > 0 ? "text-blue-600" : diff < 0 ? "text-red-600" : "text-gray-500";
+                        let sign = diff > 0 ? "+" : diff < 0 ? "-" : "±";
+                        return (
+                          <span className={`ml-2 text-xs font-semibold ${color}`}>
+                            ({sign}{Math.abs(diff).toLocaleString()}円)
+                          </span>
+                        );
+                      })()
+                    )}
                   </span>
                 )}
                 <button
