@@ -63,7 +63,7 @@ export default function ResultPage() {
     // customAmount未設定の人の合計ポイント
     const restPoints = memberPoints.filter((_, i) => !customMembers.includes(i)).reduce((a, b) => a + b, 0);
     // 支払額計算
-    let tempResults = members.map(m => {
+    const tempResults = members.map(m => {
       if (typeof m.customAmount === "number" && m.customAmount !== 0) {
         return { name: m.name, amount: m.customAmount as number, note: "特別額", position: m.position };
       } else if (restPoints > 0) {
@@ -76,12 +76,11 @@ export default function ResultPage() {
       }
     });
     // 100円単位で切り捨て
-    let rounded = tempResults.map(r =>
+    const rounded = tempResults.map(r =>
       (typeof r.amount === "number" && r.note !== "特別額") ? Math.floor(r.amount / 100) * 100 : r.amount
     );
     // 端数計算
     const roundedSum = rounded.reduce((a, b) => a + (typeof b === "number" ? b : 0), 0);
-    const originalSum = tempResults.reduce((a, b) => a + (typeof b.amount === "number" && b.note !== "特別額" ? Math.round(b.amount) : (typeof b.amount === "number" ? b.amount : 0)), 0);
     let diff = restTotal - (roundedSum - customTotal);
     // 上位役職順で端数を+100円ずつ割り振る
     const nonCustom = tempResults
