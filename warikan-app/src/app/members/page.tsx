@@ -132,6 +132,15 @@ export default function MembersPage() {
   const settlementSum = useMemo(() => results.reduce((sum, r) => sum + (typeof r.amount === "number" ? r.amount : 0), 0), [results]);
   const diff = total === "" ? 0 : settlementSum - Number(total);
 
+  // 単純な人数割の計算
+  const simpleSplit = useMemo(() => {
+    const n = members.length;
+    if (total === "" || n === 0) return null;
+    const t = Number(total);
+    if (t <= 0) return null;
+    return Math.floor(t / n);
+  }, [total, members.length]);
+
   if (!positionsData) return null;
 
   return (
@@ -150,6 +159,12 @@ export default function MembersPage() {
               placeholder="例: 5000"
             />
           </label>
+          {/* 単純な人数割の表示 */}
+          {simpleSplit !== null && (
+            <div className="flex flex-col gap-1 min-w-[180px] text-sm font-semibold text-gray-800">
+              <span>単純人数割: <span className="font-bold text-green-700">{simpleSplit.toLocaleString()} 円</span></span>
+            </div>
+          )}
           {/* 精算額・差分表示 */}
           <div className="flex flex-col gap-1 min-w-[180px] text-sm font-semibold text-gray-800">
             <span>精算額: <span className="font-bold text-blue-700">{settlementSum.toLocaleString()} 円</span></span>
