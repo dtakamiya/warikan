@@ -130,7 +130,7 @@ export default function MembersPage() {
 
   // 精算額（割り勘合計）と差分の計算
   const settlementSum = useMemo(() => results.reduce((sum, r) => sum + (typeof r.amount === "number" ? r.amount : 0), 0), [results]);
-  const diff = total === "" ? 0 : Number(total) - settlementSum;
+  const diff = total === "" ? 0 : settlementSum - Number(total);
 
   if (!positionsData) return null;
 
