@@ -96,12 +96,6 @@ export default function MembersPage() {
     setMembers(newMembers);
   };
 
-  // 割り勘計算画面へ遷移
-  const handleCalc = () => {
-    localStorage.setItem("warikan-members", JSON.stringify(members));
-    router.push("/result");
-  };
-
   if (!positionsData) return null;
 
   return (
@@ -124,19 +118,19 @@ export default function MembersPage() {
         <div className="mb-8">
           <h2 className="text-xl font-bold mb-4 text-gray-900">参加者リスト</h2>
           <ul className="space-y-4">
-            {members.map((member, idx) => (
-              <li key={idx} className="flex items-center gap-2 bg-white/90 rounded-xl shadow-md px-4 py-2 border border-gray-200 overflow-x-auto">
+            {members.map((member, _idx) => (
+              <li key={_idx} className="flex items-center gap-2 bg-white/90 rounded-xl shadow-md px-4 py-2 border border-gray-200 overflow-x-auto">
                 <input
                   type="text"
                   className="bg-white/70 border-none rounded-lg px-1 py-1 flex-1 min-w-[80px] max-w-[120px] focus:ring-2 focus:ring-blue-200 transition text-gray-900 placeholder-gray-700 text-sm"
                   placeholder="名前"
                   value={member.name}
-                  onChange={e => updateMember(idx, "name", e.target.value)}
+                  onChange={e => updateMember(_idx, "name", e.target.value)}
                 />
                 <select
                   className="bg-white/70 border-none rounded-lg px-1 py-1 min-w-[160px] max-w-[240px] focus:ring-2 focus:ring-green-200 transition text-gray-900 text-sm"
                   value={member.position}
-                  onChange={e => updateMember(idx, "position", e.target.value)}
+                  onChange={e => updateMember(_idx, "position", e.target.value)}
                 >
                   <option value="">役職</option>
                   {positionsData.positions.map((pos, i) => (
@@ -148,7 +142,7 @@ export default function MembersPage() {
                   className="bg-white/70 border-none rounded-lg px-1 py-1 w-16 min-w-[60px] max-w-[80px] focus:ring-2 focus:ring-blue-100 transition text-gray-900 placeholder-gray-700 text-sm"
                   placeholder="特別額"
                   value={member.customAmount === "" ? "" : member.customAmount}
-                  onChange={e => updateMember(idx, "customAmount", e.target.value)}
+                  onChange={e => updateMember(_idx, "customAmount", e.target.value)}
                   min={0}
                 />
                 {total !== "" && Number(total) > 0 && (
@@ -156,22 +150,22 @@ export default function MembersPage() {
                     className={`
                       min-w-[6rem] w-auto text-right
                       px-2 py-1 rounded-lg shadow font-extrabold text-base
-                      ${results[idx]?.note ? "bg-orange-100 text-orange-700 border border-orange-300" : "bg-blue-100 text-blue-900 border border-blue-300"}
+                      ${results[_idx]?.note ? "bg-orange-100 text-orange-700 border border-orange-300" : "bg-blue-100 text-blue-900 border border-blue-300"}
                       flex items-center justify-end gap-1 whitespace-nowrap
                     `}
                   >
                     <span className="whitespace-nowrap">
-                      {results[idx]?.amount?.toLocaleString() ?? "-"}
+                      {results[_idx]?.amount?.toLocaleString() ?? "-"}
                       <span className="ml-1 text-sm font-bold whitespace-nowrap">円</span>
                     </span>
-                    {results[idx]?.note && (
-                      <span className="ml-1 text-xs text-orange-500 font-semibold align-middle whitespace-nowrap">({results[idx].note})</span>
+                    {results[_idx]?.note && (
+                      <span className="ml-1 text-xs text-orange-500 font-semibold align-middle whitespace-nowrap">({results[_idx].note})</span>
                     )}
                   </span>
                 )}
                 <button
                   className="text-red-500 hover:bg-red-100 rounded px-2 py-1 transition disabled:opacity-40 text-sm whitespace-nowrap"
-                  onClick={() => removeMember(idx)}
+                  onClick={() => removeMember(_idx)}
                   disabled={members.length <= 1}
                 >
                   削除

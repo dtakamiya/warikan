@@ -103,8 +103,8 @@ export default function ResultPage() {
             <div className="text-gray-700">合計金額を入力してください</div>
           ) : (
             <ul className="space-y-4">
-              {results.map((r, i) => (
-                <li key={i} className="flex flex-col sm:flex-row gap-3 items-center bg-white/90 rounded-xl shadow-md px-4 py-3 border border-gray-200">
+              {results.map((r, _idx) => (
+                <li key={_idx} className="flex flex-col sm:flex-row gap-3 items-center bg-white/90 rounded-xl shadow-md px-4 py-3 border border-gray-200">
                   <span className="flex-1 text-lg font-semibold text-gray-900">{r.name}</span>
                   <span className="w-40 text-2xl font-extrabold text-blue-900 text-right break-keep">{r.amount.toLocaleString()} 円</span>
                   {r.note && <span className="text-xs text-gray-700">({r.note})</span>}
