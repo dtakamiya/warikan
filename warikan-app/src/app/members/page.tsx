@@ -59,7 +59,7 @@ export default function MembersPage() {
     // customAmount未設定の人の合計ポイント
     const restPoints = memberPoints.filter((_, i) => !customMembers.includes(i)).reduce((a, b) => a + b, 0);
     // 支払額計算
-    const result = members.map((m, _iii) => {
+    const result = members.map(m => {
       if (typeof m.customAmount === "number" && m.customAmount !== 0) {
         return { name: m.name, amount: m.customAmount as number, note: "特別額" };
       } else if (restPoints > 0) {
