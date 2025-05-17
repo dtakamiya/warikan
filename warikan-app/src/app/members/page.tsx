@@ -141,6 +141,26 @@ export default function MembersPage() {
     return Math.floor(t / n);
   }, [total, members.length]);
 
+  // 1ptあたりの金額の計算
+  const perPoint = useMemo(() => {
+    if (!positionsData || total === "" || members.length === 0) return null;
+    const t = Number(total);
+    if (t <= 0) return null;
+    // 特別支払額合計
+    const customTotal = members.reduce((sum, m) => sum + (typeof m.customAmount === "number" && m.customAmount !== 0 ? m.customAmount : 0), 0);
+    // 合計ポイント（特別支払額が未設定の人のみ）
+    const points = positionsData.positions.map((_, _i) =>
+      positionsData.basePoint + positionsData.pointDiff * (positionsData.positions.length - 1 - _i)
+    );
+    const memberPoints = members.map(m => {
+      const idx = positionsData.positions.indexOf(m.position);
+      return idx >= 0 ? points[idx] : 0;
+    });
+    const restPoints = memberPoints.filter((_, i) => !(typeof members[i].customAmount === "number" && members[i].customAmount !== 0)).reduce((a, b) => a + b, 0);
+    if (restPoints === 0) return null;
+    return Math.floor((t - customTotal) / restPoints);
+  }, [positionsData, total, members]);
+
   if (!positionsData) return null;
 
   return (
@@ -163,6 +183,10 @@ export default function MembersPage() {
           {simpleSplit !== null && (
             <div className="flex flex-col gap-1 min-w-[180px] text-sm font-semibold text-gray-800">
               <span>単純人数割: <span className="font-bold text-green-700">{simpleSplit.toLocaleString()} 円</span></span>
+              {/* 1ptあたりの金額表示 */}
+              {perPoint !== null && (
+                <span>1ptあたり: <span className="font-bold text-blue-700">{perPoint.toLocaleString()} 円</span></span>
+              )}
             </div>
           )}
           {/* 精算額・差分表示 */}
