@@ -119,6 +119,16 @@ export default function MembersPage() {
     setMembers(newMembers);
   };
 
+  // 参加者保存
+  const saveMembers = () => {
+    localStorage.setItem("warikan-members-saved", JSON.stringify(members));
+  };
+  // 参加者呼び出し
+  const loadMembers = () => {
+    const data = localStorage.getItem("warikan-members-saved");
+    if (data) setMembers(JSON.parse(data));
+  };
+
   if (!positionsData) return null;
 
   return (
@@ -216,6 +226,20 @@ export default function MembersPage() {
               onClick={() => router.push("/positions")}
             >
               役職設定に戻る
+            </button>
+          </div>
+          <div className="flex gap-2">
+            <button
+              className="px-4 py-2 bg-blue-200 text-blue-900 rounded hover:bg-blue-300 font-semibold"
+              onClick={saveMembers}
+            >
+              参加者を保存
+            </button>
+            <button
+              className="px-4 py-2 bg-green-200 text-green-900 rounded hover:bg-green-300 font-semibold"
+              onClick={loadMembers}
+            >
+              保存した参加者を呼び出し
             </button>
           </div>
         </div>
