@@ -71,14 +71,14 @@ export default function MembersPage() {
         return { name: m.name, amount: 0, position: m.position };
       }
     });
-    // 500円単位で切り捨て
+    // 100円単位で切り捨て
     const rounded = tempResults.map(r =>
-      (typeof r.amount === "number" && r.note !== "特別額") ? Math.floor(r.amount / 500) * 500 : r.amount
+      (typeof r.amount === "number" && r.note !== "特別額") ? Math.floor(r.amount / 100) * 100 : r.amount
     );
     // 端数計算
     const roundedSum = rounded.reduce((a, b) => a + (typeof b === "number" ? b : 0), 0);
     let diff = restTotal - (roundedSum - customTotal);
-    // 上位役職順で端数を+500円ずつ割り振る
+    // 上位役職順で端数を+100円ずつ割り振る
     const nonCustom = tempResults
       .map((r, i) => ({ ...r, idx: i }))
       .filter(r => r.note !== "特別額");
@@ -86,8 +86,8 @@ export default function MembersPage() {
     nonCustom.sort((a, b) => positionsData.positions.indexOf(a.position) - positionsData.positions.indexOf(b.position));
     let i = 0;
     while (diff > 0 && i < nonCustom.length) {
-      rounded[nonCustom[i].idx] += 500;
-      diff -= 500;
+      rounded[nonCustom[i].idx] += 100;
+      diff -= 100;
       i++;
       if (i === nonCustom.length) i = 0;
     }
