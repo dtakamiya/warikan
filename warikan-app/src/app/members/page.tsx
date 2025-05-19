@@ -15,6 +15,15 @@ type PositionsData = {
   basePoint: number;
 };
 
+const ROUND_UNIT_OPTIONS = [
+  { value: 1, label: '1円単位' },
+  { value: 10, label: '10円単位' },
+  { value: 50, label: '50円単位' },
+  { value: 100, label: '100円単位' },
+  { value: 500, label: '500円単位' },
+  { value: 1000, label: '1000円単位' },
+];
+
 export default function MembersPage() {
   const [positionsData, setPositionsData] = useState<PositionsData | null>(null);
   const [members, setMembers] = useState<Member[]>([
@@ -22,6 +31,7 @@ export default function MembersPage() {
   ]);
   const [total, setTotal] = useState<number | "">("");
   const [results, setResults] = useState<{ name: string; amount: number; note?: string }[]>([]);
+  const [roundUnit, setRoundUnit] = useState<number>(100);
   const router = useRouter();
 
   // localStorageから役職情報を取得
@@ -71,10 +81,11 @@ export default function MembersPage() {
         return { name: m.name, amount: 0, position: m.position };
       }
     });
-    // 100円単位で切り捨て
-    const rounded = tempResults.map(r =>
-      (typeof r.amount === "number" && r.note !== "特別額") ? Math.floor(r.amount / 100) * 100 : r.amount
-    );
+    // 丸め処理
+    const rounded = tempResults.map(r => {
+      if (typeof r.amount !== 'number' || r.note === '特別額') return r.amount;
+      return Math.floor(r.amount / roundUnit) * roundUnit;
+    });
     // 端数計算
     const roundedSum = rounded.reduce((a, b) => a + (typeof b === "number" ? b : 0), 0);
     let diff = restTotal - (roundedSum - customTotal);
@@ -94,7 +105,7 @@ export default function MembersPage() {
     // 結果をセット
     const result = tempResults.map((r, i) => ({ name: r.name, amount: rounded[i], note: r.note }));
     setResults(result);
-  }, [positionsData, members, total]);
+  }, [positionsData, members, total, roundUnit]);
 
   // 参加者追加
   const addMember = () => {
@@ -167,7 +178,7 @@ export default function MembersPage() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-green-50 p-4">
       <div className="w-full max-w-4xl bg-white/70 backdrop-blur-md shadow-2xl rounded-2xl p-8">
         <h1 className="text-3xl font-extrabold mb-8 text-center text-gray-900 tracking-tight drop-shadow">参加者入力</h1>
-        <div className="mb-8 flex flex-col sm:flex-row gap-6 justify-center items-end">
+        <div className="mb-8 flex flex-col sm:flex-row gap-4 justify-center items-end">
           <label className="flex flex-col text-base font-semibold text-gray-900">
             合計金額（円）
             <input
@@ -178,6 +189,18 @@ export default function MembersPage() {
               min={0}
               placeholder="例: 5000"
             />
+          </label>
+          <label className="flex flex-col text-base font-semibold text-gray-900 min-w-[120px]">
+            丸め単位
+            <select
+              className="border rounded px-2 py-1 text-base mt-2"
+              value={roundUnit}
+              onChange={e => setRoundUnit(Number(e.target.value))}
+            >
+              {ROUND_UNIT_OPTIONS.map(opt => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
           </label>
           {/* 単純な人数割の表示 */}
           {simpleSplit !== null && (
